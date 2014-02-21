@@ -31,9 +31,41 @@ class Apc
     protected $int_ttl = 0;
 
 
+    public function __set($name, $mix_value)
+    {
+        if($name == 'value')
+        {
+            $this->set($mix_value);
+        }
+    }
+
+
+    public function __get($name)
+    {
+        if($name == 'value')
+        {
+            $bool_success = true;
+            $mix_result = apc_fetch($this->str_id, $bool_success);
+
+            if($bool_success)
+            {
+                return $mix_result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
 
     public function __construct($str_key, $int_ttl = 0)
     {
+        if(!extension_loaded('apc'))
+        {
+            throw new \RuntimeException('APC extension must be available in order to use ' . __CLASS__);
+        }
+
         if(!is_string($str_key) || empty($str_key))
         {
             throw new \InvalidArgumentException('Key must be a no null string.');
@@ -73,7 +105,15 @@ class Apc
 
     public function get()
     {
-        return apc_fetch($this->str_id);
+        $bool_success = true;
+        $mix_result = apc_fetch($this->str_id, $bool_success);
+
+        if(!$bool_success)
+        {
+            throw new \RuntimeException('Cannot get stored value.');
+        }
+
+        return $mix_result;
     }
 
 
