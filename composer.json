@@ -1,0 +1,24 @@
+{
+    "name": "malenki/apc",
+    "type": "library",
+    "description": "Simple wrapper for some APC features.",
+    "keywords": ["cache","APC", "OOP"],
+    "homepage": "https://github.com/malenkiki/apc",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michel Petit",
+            "email": "petit.michel@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-apc": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Malenki": "src/"
+        }
+    }
+}
