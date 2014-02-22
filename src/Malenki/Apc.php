@@ -23,7 +23,7 @@
  */
 
 
-namespace Malenki\Apc;
+namespace Malenki;
 
 class Apc
 {
