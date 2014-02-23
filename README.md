@@ -52,14 +52,35 @@ echo $apc; // will print "foo"
 
 If the value is not a scalar, `print_r()` function is used.
 
-## Testing value
+## Deleting value
 
-You can test is a value exist before doing something with it…
+You can force removing value from APC cache using `delete()` method or magic `unset()`:
 
 ```php
 use \Malenki\Apc;
 $apc = new Apc('key_id_you_have_selected', 3600);
+$apc->set('foo');
+$apc->delete();
+// or
+unset($apc->value);
+```
+
+## Testing value
+
+You can test if a value exists before doing something with it. You have to call `exists()` method or magic `isset()`:
+
+```php
+use \Malenki\Apc;
+$apc = new Apc('key_id_you_have_selected', 3600);
+
+// using method
 if(!$apc->exists())
+{
+    $apc->value = 'foo';
+}
+
+// or magic isset()
+if(!isset($apc->value))
 {
     $apc->value = 'foo';
 }
