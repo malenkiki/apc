@@ -59,6 +59,14 @@ class Apc
     }
 
 
+    public function __unset($name)
+    {
+        if($name == 'value')
+        {
+            $this->delete();
+        }
+    }
+
     public function __construct($str_key, $int_ttl = 0)
     {
         if(!extension_loaded('apc'))
@@ -117,6 +125,17 @@ class Apc
     }
 
 
+    public function delete()
+    {
+        $bool_success = true;
+
+        $bool_success = apc_delete($this->str_id);
+
+        if(!$bool_success)
+        {
+            throw new \RuntimeException('Cannot delete stored value.');
+        }
+    }
 
     public function __toString()
     {
