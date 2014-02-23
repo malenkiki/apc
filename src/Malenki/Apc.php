@@ -128,7 +128,16 @@ class Apc
 
     public function set($mix_value)
     {
-        apc_add($this->str_id, $mix_value, $this->int_ttl);
+        if($this->exists())
+        {
+            apc_store($this->str_id, $mix_value, $this->int_ttl);
+        }
+        else
+        {
+            apc_add($this->str_id, $mix_value, $this->int_ttl);
+        }
+
+        return $this;
     }
 
 
@@ -154,6 +163,7 @@ class Apc
     }
 
 
+
     public function delete()
     {
         $bool_success = true;
@@ -164,7 +174,11 @@ class Apc
         {
             throw new \RuntimeException('Cannot delete stored value.');
         }
+
+        return $this;
     }
+
+
 
     public function __toString()
     {
