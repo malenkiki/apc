@@ -58,6 +58,15 @@ class Apc
         }
     }
 
+    public function __isset($name)
+    {
+        if($name == 'value')
+        {
+            return $this->exists();
+        }
+    }
+
+
 
     public function __unset($name)
     {
