@@ -86,3 +86,15 @@ if(!isset($apc->value))
 }
 ```
 
+## Cleaning the cache
+
+You can clean all or just some part like `user` or `opcode`:
+
+```php
+use \Malenki\Apc;
+Apc::clean(); // clean all
+// or
+Apc::clean('user'); // clean user cache type
+// or
+Apc::clean('opcode'); // clean opcode cache type
+```

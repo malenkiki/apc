@@ -76,6 +76,26 @@ class Apc
         }
     }
 
+
+    public static function clear($type = 'all')
+    {
+        if(!in_array($type, array('all', 'user', 'opcode')))
+        {
+            throw new \InvalidArgumentException('To clean cache, you must use either "all", "user" or "opcode" value.');
+        }
+
+        if($type == 'all')
+        {
+            apc_clear_cache($type);
+        }
+        else
+        {
+            apc_clear_cache();
+            apc_clear_cache('user');
+            apc_clear_cache('opcode');
+        }
+    }
+
     public function __construct($str_key, $int_ttl = 0)
     {
         if(!extension_loaded('apc'))
