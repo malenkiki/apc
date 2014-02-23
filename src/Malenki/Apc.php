@@ -25,21 +25,73 @@
 
 namespace Malenki;
 
+/**
+ * Apc simple wrapper. 
+ * 
+ * You can set new value or update one by calling uniq method `set()`.
+ *
+ * You can get, delete or test if entry exists with respectively `get()`, 
+ * `delete()`, and `exists()` methods.
+ *
+ * A static method `clean()` allow you to clean all cache or just some 
+ * elements.
+ * 
+ * With magic attribute `value` you can use `isset()`, `unset()` functions, or 
+ * set and read content directly.
+ *
+ * @copyright 2014 Michel PETIT
+ * @author Michel Petit <petit.michel@gmail.com> 
+ * @license MIT
+ */
 class Apc
 {
+    /**
+     * The APC key 
+     * 
+     * @var string
+     * @access protected
+     */
     protected $str_id = null;
+
+    /**
+     * Time to live, in second. 
+     * 
+     * @var integer
+     * @access protected
+     */
     protected $int_ttl = 0;
 
 
+
+    /**
+     * Magic setter. 
+     * 
+     * Acts like Apc::set() method.
+     *
+     * @param string $name Must be `value`.
+     * @param mixed $mix_value content to set.
+     * @access public
+     * @return Apc
+     */
     public function __set($name, $mix_value)
     {
         if($name == 'value')
         {
-            $this->set($mix_value);
+            return $this->set($mix_value);
         }
     }
 
 
+
+    /**
+     * Magic getter.
+     *
+     * Acts like Apc::get() method.
+     * 
+     * @param string $name Must be `string`
+     * @access public
+     * @return mixed Entry content
+     */
     public function __get($name)
     {
         if($name == 'value')
@@ -58,6 +110,17 @@ class Apc
         }
     }
 
+
+
+    /**
+     * Magic isset.
+     * 
+     * Acts as Apc::exists() method.
+     *
+     * @param string $name Must be `value`.
+     * @access public
+     * @return boolean
+     */
     public function __isset($name)
     {
         if($name == 'value')
@@ -68,6 +131,15 @@ class Apc
 
 
 
+    /**
+     * Magic unset call.
+     *
+     * Acts like Apc::delete() method.
+     *
+     * @param string $name Must be `value`
+     * @access public
+     * @return void
+     */
     public function __unset($name)
     {
         if($name == 'value')
@@ -77,6 +149,15 @@ class Apc
     }
 
 
+    /**
+     * Clear all the cache, the user cahe type or the opcade cache type. 
+     * 
+     * @param string $type Cache type name
+     * @static
+     * @throw \InvalidArgumentException If given type is not valid.
+     * @access public
+     * @return void
+     */
     public static function clear($type = 'all')
     {
         if(!in_array($type, array('all', 'user', 'opcode')))
@@ -96,6 +177,20 @@ class Apc
         }
     }
 
+
+
+    /**
+     * Constructor defines new cache entry by giving its name and optionnaly its time to live in seconds. 
+     * 
+     * @throw \RuntimeException If APC extension is not loaded
+     * @throw \InvalidArgumentException If key is not valid string.
+     * @throw \InvalidArgumentException If TTL is not numeric.
+     * @throw \InvalidArgumentException If TTL is negative value.
+     * @param string $str_key Key name that defines this entry.
+     * @param int $int_ttl Optional time to live. If not given or equals to 0, then will be present untill cache is clean.
+     * @access public
+     * @return void
+     */
     public function __construct($str_key, $int_ttl = 0)
     {
         if(!extension_loaded('apc'))
@@ -126,6 +221,13 @@ class Apc
 
 
 
+    /**
+     * Sets value for current key.
+     * 
+     * @param mixed $mix_value The value content.
+     * @access public
+     * @return Apc
+     */
     public function set($mix_value)
     {
         if($this->exists())
@@ -142,6 +244,12 @@ class Apc
 
 
 
+    /**
+     * Tests whether the given entry exists.
+     * 
+     * @access public
+     * @return boolean
+     */
     public function exists()
     {
         return apc_exists($this->str_id);
@@ -149,6 +257,13 @@ class Apc
 
 
 
+    /**
+     * Gets the value for the current entry. 
+     * 
+     * @throw \RuntimeException If content cannot be fetched.
+     * @access public
+     * @return mixed The entry content.
+     */
     public function get()
     {
         $bool_success = true;
@@ -164,6 +279,13 @@ class Apc
 
 
 
+    /**
+     * Deletes current entry.
+     * 
+     * @throw \RuntimeException If it cannot delete current entry.
+     * @access public
+     * @return Apc
+     */
     public function delete()
     {
         $bool_success = true;
@@ -180,6 +302,16 @@ class Apc
 
 
 
+    /**
+     * Return entry's content as string in string context.
+     *
+     * If used into string context, the current object will return the scalar 
+     * content as a string or, if it is not a scalar, does a `print_r()` 
+     * rendering result.
+     * 
+     * @access public
+     * @return string
+     */
     public function __toString()
     {
         $result = $this->get();
