@@ -2,6 +2,17 @@
 
 Small wrapper of some apc features.
 
+## Install
+
+You can clone this repository or use **composer**, because [APC is available on Packagist](https://packagist.org/packages/malenki/apc)!
+```json
+{
+    "require": {
+        "malenki/apc": "dev-master",
+    }
+}
+```
+
 ## Instanciate
 While you instanciate an object of this class, you must give at least one argument to set the key name:
 
